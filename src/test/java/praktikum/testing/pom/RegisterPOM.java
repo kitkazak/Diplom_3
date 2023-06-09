@@ -22,6 +22,7 @@ public class RegisterPOM {
     By passwordInput = By.xpath(".//label[text()='Пароль']/parent::div/input");
     By regButton = By.xpath(".//button[text()='Зарегистрироваться']");
     By invalidPasswordLabel = By.xpath(".//p[text()='Некорректный пароль']");
+    By loginButton = By.xpath(".//a[@href=\"/login\"]");
 
     public void setNameInput(String name) {
         driver.findElement(nameInput).sendKeys(name);
@@ -42,5 +43,9 @@ public class RegisterPOM {
     public void checkInvalidPasswordLabelIsVisible() {
         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(driver.findElement(invalidPasswordLabel)));
         assertTrue(driver.findElement(invalidPasswordLabel).isDisplayed());
+    }
+
+    public void clickLoginButton() {
+        driver.findElement(loginButton).click();
     }
 }
