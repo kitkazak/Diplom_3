@@ -11,15 +11,13 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import praktikum.testing.api.Auth;
-import praktikum.testing.pom.AccountPOM;
 import praktikum.testing.pom.ConstructorPOM;
 import praktikum.testing.pom.LoginPOM;
 
 import java.util.HashMap;
 import java.util.UUID;
 
-public class AccountTests {
-
+public class ConstructorTests {
     private WebDriver driver;
 
     @BeforeClass
@@ -28,8 +26,8 @@ public class AccountTests {
     }
 
     @Test
-    @DisplayName("Переход в личный кабинет")
-    public void clickOnAccountButton() {
+    @DisplayName("Переход по кнопке 'Булки'")
+    public void testBunsButton() {
         UUID uuid = UUID.randomUUID();
 
         // Создать пользователя по API
@@ -53,10 +51,11 @@ public class AccountTests {
         ConstructorPOM constructorPOM = new ConstructorPOM(driver);
         constructorPOM.checkUrl();
 
-        // Проверяем переход в личный кабинет
-        constructorPOM.clickAccountButton();
-        AccountPOM accountPOM = new AccountPOM(driver);
-        accountPOM.checkUrl();
+        // Переход по кнопке 'Булки'
+        // Сначала переходим по кнопке 'Соусы', чтобы кнопка 'Булки' стала кликабельной
+        constructorPOM.clickSauceButton();
+        constructorPOM.clickBunsButton();
+        constructorPOM.checkBunsHeaderIsVisible();
 
         // Удалить пользователя
         Response delRes = Auth.delete(res.jsonPath().get("accessToken"));
@@ -64,8 +63,8 @@ public class AccountTests {
     }
 
     @Test
-    @DisplayName("Переход из личного кабинета в конструктор через кнопку 'Конструктор'")
-    public void clickOnCostructorButton() {
+    @DisplayName("Переход по кнопке 'Соусы'")
+    public void testSauceButton() {
         UUID uuid = UUID.randomUUID();
 
         // Создать пользователя по API
@@ -89,15 +88,9 @@ public class AccountTests {
         ConstructorPOM constructorPOM = new ConstructorPOM(driver);
         constructorPOM.checkUrl();
 
-        // Проверяем переход в личный кабинет
-        constructorPOM.clickAccountButton();
-        AccountPOM accountPOM = new AccountPOM(driver);
-        accountPOM.checkUrl();
-
-        // Переходим в конструктор через кнопку "Конструктор"
-        accountPOM.clickConstuctorButton();
-        constructorPOM.checkUrl();
-        constructorPOM.checkMainHeaderIsVisible();
+        // Переход по кнопке 'Соусы'
+        constructorPOM.clickSauceButton();
+        constructorPOM.checkSauceHeaderIsVisible();
 
         // Удалить пользователя
         Response delRes = Auth.delete(res.jsonPath().get("accessToken"));
@@ -105,8 +98,8 @@ public class AccountTests {
     }
 
     @Test
-    @DisplayName("Переход из личного кабинета в конструктор через логотип")
-    public void clickOnLogo() {
+    @DisplayName("Переход по кнопке 'Начинки'")
+    public void testFillingButton() {
         UUID uuid = UUID.randomUUID();
 
         // Создать пользователя по API
@@ -130,57 +123,8 @@ public class AccountTests {
         ConstructorPOM constructorPOM = new ConstructorPOM(driver);
         constructorPOM.checkUrl();
 
-        // Проверяем переход в личный кабинет
-        constructorPOM.clickAccountButton();
-        AccountPOM accountPOM = new AccountPOM(driver);
-        accountPOM.checkUrl();
-
-        // Переходим в конструктор через кнопку логотип
-        accountPOM.clickLogo();
-        constructorPOM.checkUrl();
-        constructorPOM.checkMainHeaderIsVisible();
-
-        // Удалить пользователя
-        Response delRes = Auth.delete(res.jsonPath().get("accessToken"));
-        delRes.then().statusCode(202);
-    }
-
-    @Test
-    @DisplayName("Выход")
-    public void clickOnExit() {
-        UUID uuid = UUID.randomUUID();
-
-        // Создать пользователя по API
-        HashMap<String, Object> authRegisterBody = new HashMap<>();
-        authRegisterBody.put("email", "kitkazak_email" + uuid.toString() + "@yandex.ru");
-        authRegisterBody.put("password", "kitkazak_password" + uuid.toString());
-        authRegisterBody.put("name", "kitkazak_name" + uuid.toString());
-
-        Response res = Auth.register(new JSONObject(authRegisterBody));
-        res.then().statusCode(200);
-
-        driver.get("https://stellarburgers.nomoreparties.site/login");
-
-        // Вход
-        LoginPOM loginPOM = new LoginPOM(driver);
-        loginPOM.setEmailInput("kitkazak_email" + uuid.toString() + "@yandex.ru");
-        loginPOM.setPasswordInput("kitkazak_password" + uuid.toString());
-        loginPOM.clickLoginButton();
-
-        // Проверяем, что попали на конструктор
-        ConstructorPOM constructorPOM = new ConstructorPOM(driver);
-        constructorPOM.checkUrl();
-
-        // Проверяем переход в личный кабинет
-        constructorPOM.clickAccountButton();
-        AccountPOM accountPOM = new AccountPOM(driver);
-        accountPOM.checkUrl();
-
-        // Выходим из аккаунта
-        accountPOM.clickExitButton();
-
-        // Проверяем, что попали на страницу логина
-        loginPOM.checkUrl();
+        constructorPOM.clickFillingButton();
+        constructorPOM.checkFillingHeaderIsVisible();
 
         // Удалить пользователя
         Response delRes = Auth.delete(res.jsonPath().get("accessToken"));
@@ -203,4 +147,5 @@ public class AccountTests {
     public void tearDown() {
         driver.quit();
     }
+
 }
