@@ -16,21 +16,24 @@ import praktikum.testing.pom.ConstructorPOM;
 import praktikum.testing.pom.LoginPOM;
 
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 
 public class AccountTests {
 
     private WebDriver driver;
+    UUID uuid;
+    Response createResponse;
+
 
     @BeforeClass
     public static void setupClass() {
         WebDriverManager.chromedriver().setup();
     }
 
-    @Test
-    @DisplayName("Переход в личный кабинет")
-    public void clickOnAccountButton() {
-        UUID uuid = UUID.randomUUID();
+    @Before
+    public void setUp() {
+        uuid = UUID.randomUUID();
 
         // Создать пользователя по API
         HashMap<String, Object> authRegisterBody = new HashMap<>();
@@ -38,9 +41,21 @@ public class AccountTests {
         authRegisterBody.put("password", "kitkazak_password" + uuid.toString());
         authRegisterBody.put("name", "kitkazak_name" + uuid.toString());
 
-        Response res = Auth.register(new JSONObject(authRegisterBody));
-        res.then().statusCode(200);
+        createResponse = Auth.register(new JSONObject(authRegisterBody));
+        createResponse.then().statusCode(200);
+    }
 
+    @After
+    public void tearDown() {
+        // Удалить пользователя
+        Response delRes = Auth.delete(createResponse.jsonPath().get("accessToken"));
+        delRes.then().statusCode(202);
+        driver.quit();
+    }
+
+    @Test
+    @DisplayName("Переход в личный кабинет")
+    public void clickOnAccountButton() {
         driver.get("https://stellarburgers.nomoreparties.site/login");
 
         // Вход
@@ -57,26 +72,11 @@ public class AccountTests {
         constructorPOM.clickAccountButton();
         AccountPOM accountPOM = new AccountPOM(driver);
         accountPOM.checkUrl();
-
-        // Удалить пользователя
-        Response delRes = Auth.delete(res.jsonPath().get("accessToken"));
-        delRes.then().statusCode(202);
     }
 
     @Test
     @DisplayName("Переход из личного кабинета в конструктор через кнопку 'Конструктор'")
     public void clickOnCostructorButton() {
-        UUID uuid = UUID.randomUUID();
-
-        // Создать пользователя по API
-        HashMap<String, Object> authRegisterBody = new HashMap<>();
-        authRegisterBody.put("email", "kitkazak_email" + uuid.toString() + "@yandex.ru");
-        authRegisterBody.put("password", "kitkazak_password" + uuid.toString());
-        authRegisterBody.put("name", "kitkazak_name" + uuid.toString());
-
-        Response res = Auth.register(new JSONObject(authRegisterBody));
-        res.then().statusCode(200);
-
         driver.get("https://stellarburgers.nomoreparties.site/login");
 
         // Вход
@@ -98,26 +98,11 @@ public class AccountTests {
         accountPOM.clickConstuctorButton();
         constructorPOM.checkUrl();
         constructorPOM.checkMainHeaderIsVisible();
-
-        // Удалить пользователя
-        Response delRes = Auth.delete(res.jsonPath().get("accessToken"));
-        delRes.then().statusCode(202);
     }
 
     @Test
     @DisplayName("Переход из личного кабинета в конструктор через логотип")
     public void clickOnLogo() {
-        UUID uuid = UUID.randomUUID();
-
-        // Создать пользователя по API
-        HashMap<String, Object> authRegisterBody = new HashMap<>();
-        authRegisterBody.put("email", "kitkazak_email" + uuid.toString() + "@yandex.ru");
-        authRegisterBody.put("password", "kitkazak_password" + uuid.toString());
-        authRegisterBody.put("name", "kitkazak_name" + uuid.toString());
-
-        Response res = Auth.register(new JSONObject(authRegisterBody));
-        res.then().statusCode(200);
-
         driver.get("https://stellarburgers.nomoreparties.site/login");
 
         // Вход
@@ -139,26 +124,11 @@ public class AccountTests {
         accountPOM.clickLogo();
         constructorPOM.checkUrl();
         constructorPOM.checkMainHeaderIsVisible();
-
-        // Удалить пользователя
-        Response delRes = Auth.delete(res.jsonPath().get("accessToken"));
-        delRes.then().statusCode(202);
     }
 
     @Test
     @DisplayName("Выход")
     public void clickOnExit() {
-        UUID uuid = UUID.randomUUID();
-
-        // Создать пользователя по API
-        HashMap<String, Object> authRegisterBody = new HashMap<>();
-        authRegisterBody.put("email", "kitkazak_email" + uuid.toString() + "@yandex.ru");
-        authRegisterBody.put("password", "kitkazak_password" + uuid.toString());
-        authRegisterBody.put("name", "kitkazak_name" + uuid.toString());
-
-        Response res = Auth.register(new JSONObject(authRegisterBody));
-        res.then().statusCode(200);
-
         driver.get("https://stellarburgers.nomoreparties.site/login");
 
         // Вход
@@ -181,10 +151,6 @@ public class AccountTests {
 
         // Проверяем, что попали на страницу логина
         loginPOM.checkUrl();
-
-        // Удалить пользователя
-        Response delRes = Auth.delete(res.jsonPath().get("accessToken"));
-        delRes.then().statusCode(202);
     }
 
     @Before
@@ -197,10 +163,5 @@ public class AccountTests {
 
         // FF
         // driver = new FirefoxDriver();
-    }
-
-    @After
-    public void tearDown() {
-        driver.quit();
     }
 }

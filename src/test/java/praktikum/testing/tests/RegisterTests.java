@@ -18,17 +18,26 @@ import java.util.UUID;
 public class RegisterTests {
 
     private WebDriver driver;
+    UUID uuid;
 
     @BeforeClass
     public static void setupClass() {
         WebDriverManager.chromedriver().setup();
     }
 
+    @Before
+    public void setUp() {
+        uuid = UUID.randomUUID();
+    }
+
+    @After
+    public void tearDown() {
+        driver.quit();
+    }
+
     @Test
     @DisplayName("Успешная регистрация")
     public void successfulRegistration() throws InterruptedException {
-        UUID uuid = UUID.randomUUID();
-
         RegisterPOM registerPOM = new RegisterPOM(driver);
         driver.get("https://stellarburgers.nomoreparties.site/register");
         registerPOM.setNameInput("Nikita");
@@ -56,8 +65,6 @@ public class RegisterTests {
     @DisplayName("Ошибку для некорректного пароля")
     @Description("Минимальный пароль — шесть символов")
     public void registrationWithInvalidPassword() {
-        UUID uuid = UUID.randomUUID();
-
         RegisterPOM registerPOM = new RegisterPOM(driver);
         driver.get("https://stellarburgers.nomoreparties.site/register");
         registerPOM.setNameInput("Nikita");
@@ -78,10 +85,5 @@ public class RegisterTests {
 
         // FF
         // driver = new FirefoxDriver();
-    }
-
-    @After
-    public void tearDown() {
-        driver.quit();
     }
 }
