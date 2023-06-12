@@ -3,6 +3,7 @@ package praktikum.testing.pom;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -22,9 +23,6 @@ public class ConstructorPOM {
     By sauceButton = By.xpath(".//span[text()='Соусы']/parent::div");
     By fillingButton = By.xpath(".//span[text()='Начинки']/parent::div");
     By bunsButton = By.xpath(".//span[text()='Булки']/parent::div");
-    By sauceHeader = By.xpath(".//h2[text()='Соусы']");
-    By fillingsHeader = By.xpath(".//h2[text()='Начинки']");
-    By bunsHeader = By.xpath(".//h2[text()='Булки']");
     
     public void checkMainHeaderIsVisible() {
         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(driver.findElement(mainHeader)));
@@ -46,26 +44,23 @@ public class ConstructorPOM {
         driver.findElement(fillingButton).click();
     }
 
-    public void checkFillingHeaderIsVisible() {
-        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(driver.findElement(fillingsHeader)));
-        Assert.assertTrue(driver.findElement(fillingsHeader).isDisplayed());
+    public void checkFillingButtonIsClicked() {
+        Assert.assertTrue(driver.findElement(fillingButton).getAttribute("class").contains("tab_tab_type_current__2BEPc"));
     }
 
     public void clickSauceButton() {
         driver.findElement(sauceButton).click();
     }
 
-    public void checkSauceHeaderIsVisible() {
-        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(driver.findElement(sauceHeader)));
-        Assert.assertTrue(driver.findElement(sauceHeader).isDisplayed());
+    public void checkSauceButtonIsClicked() {
+        Assert.assertTrue(driver.findElement(sauceButton).getAttribute("class").contains("tab_tab_type_current__2BEPc"));
     }
 
     public void clickBunsButton() {
         driver.findElement(bunsButton).click();
     }
 
-    public void checkBunsHeaderIsVisible() {
-        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(driver.findElement(bunsHeader)));
-        Assert.assertTrue(driver.findElement(bunsHeader).isDisplayed());
+    public void checkBunsButtonIsClicked() {
+        Assert.assertTrue(driver.findElement(bunsButton).getAttribute("class").contains("tab_tab_type_current__2BEPc"));
     }
 }

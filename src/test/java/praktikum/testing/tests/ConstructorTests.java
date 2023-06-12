@@ -55,7 +55,7 @@ public class ConstructorTests {
         // Сначала переходим по кнопке 'Соусы', чтобы кнопка 'Булки' стала кликабельной
         constructorPOM.clickSauceButton();
         constructorPOM.clickBunsButton();
-        constructorPOM.checkBunsHeaderIsVisible();
+        constructorPOM.checkBunsButtonIsClicked();
 
         // Удалить пользователя
         Response delRes = Auth.delete(res.jsonPath().get("accessToken"));
@@ -90,7 +90,7 @@ public class ConstructorTests {
 
         // Переход по кнопке 'Соусы'
         constructorPOM.clickSauceButton();
-        constructorPOM.checkSauceHeaderIsVisible();
+        constructorPOM.checkSauceButtonIsClicked();
 
         // Удалить пользователя
         Response delRes = Auth.delete(res.jsonPath().get("accessToken"));
@@ -124,7 +124,7 @@ public class ConstructorTests {
         constructorPOM.checkUrl();
 
         constructorPOM.clickFillingButton();
-        constructorPOM.checkFillingHeaderIsVisible();
+        constructorPOM.checkFillingButtonIsClicked();
 
         // Удалить пользователя
         Response delRes = Auth.delete(res.jsonPath().get("accessToken"));
